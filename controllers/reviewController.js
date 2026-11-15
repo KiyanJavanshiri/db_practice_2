@@ -1,0 +1,24 @@
+import { Review } from "../models/Review.js";
+
+export const createReview = async (req, res) => {
+  try {
+    const review = await Review.create(req.body);
+    res.status(201).json({ success: true, data: review });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+export const getReviews = async (req, res) => {
+  try {
+    const reviews = await Review.find()
+      .populate("userId", "first_name last_name")
+      .populate("productId", "title");
+
+    res
+      .status(200)
+      .json({ success: true, count: reviews.length, data: reviews });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
